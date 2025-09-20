@@ -1,4 +1,9 @@
 package ru.itmo.reactivejava.model;
 
-public class Description {
+public record Description(
+        MusicCompetitionGenre genre,
+        MusicCompetitionFormat format,
+        ParticipantsLevel participantsLevel,
+        String description
+) {
 }

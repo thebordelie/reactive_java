@@ -1,8 +1,6 @@
 package ru.itmo.reactivejava;
 
-import ru.itmo.reactivejava.generator.EventGenerator;
-import ru.itmo.reactivejava.generator.PlacementGenerator;
-import ru.itmo.reactivejava.generator.UserGenerator;
+import ru.itmo.reactivejava.generator.*;
 import ru.itmo.reactivejava.model.*;
 import ru.itmo.reactivejava.pool.Pools;
 import ru.itmo.reactivejava.pool.SimplePool;
@@ -13,19 +11,24 @@ public class App {
 
         // Pools
         SimplePool<User> userSimplePool = Pools.get(User.class);
+        SimplePool<Member> memberSimplePool = Pools.get(Member.class);
+        SimplePool<Description> descriptionSimplePool = Pools.get(Description.class);
         SimplePool<Placement> placementSimplePool = Pools.get(Placement.class);
         SimplePool<Event> eventSimplePool = Pools.get(Event.class);
 
         // Generators
-        EventGenerator eventGenerator = new EventGenerator();
         UserGenerator userGenerator = new UserGenerator();
+        MemberGenerator memberGenerator = new MemberGenerator();
+        DescriptionGenerator descriptionGenerator = new DescriptionGenerator();
         PlacementGenerator placementGenerator = new PlacementGenerator();
+        EventGenerator eventGenerator = new EventGenerator();
 
         // simple generate
         userSimplePool.addAll(userGenerator.generate(10000));
+        memberSimplePool.addAll(memberGenerator.generate(500));
+        descriptionSimplePool.addAll(descriptionGenerator.generate(100));
         placementSimplePool.addAll(placementGenerator.generate(100));
         eventSimplePool.addAll(eventGenerator.generate(100));
-
 
         // Аггрегация через цикл
         long startCycle = System.currentTimeMillis();

@@ -1,29 +1,86 @@
 package ru.itmo.reactivejava.generator;
 
-import ru.itmo.reactivejava.model.Event;
+import ru.itmo.reactivejava.model.*;
+import ru.itmo.reactivejava.pool.Pools;
+import ru.itmo.reactivejava.pool.SimplePool;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Random;
 
-// TODO Артем
 public class EventGenerator implements Generator<Event> {
+    private long currentId = 1;
+    private final Random random = new Random();
+    private final SimplePool<Description> descriptionPool = Pools.get(Description.class);
+    private final SimplePool<Placement> placementsPool = Pools.get(Placement.class);
+    private final SimplePool<Member> membersPoll = Pools.get(Member.class);
+    private final SimplePool<User> usersPoll = Pools.get(User.class);
 
     @Override
     public Event generate() {
-        return new Event();
+        long id = generateId();
+        String name = generateName();
+        LocalDateTime time = generateRandomDateTime();
+        Description description = generateRandomDescription();
+        Placement placement = generateRandomPlacement();
+        List<Member> members = new ArrayList<>(generateRandomMembers());
+        List<User> users = new ArrayList<>(generateRandomUsers());
+        return new Event(id, name, time, description, placement, members, users);
     }
 
     @Override
     public Collection<Event> generate(int count) {
-
-
         ArrayList<Event> events = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            Event event = generate();
-            MemberGenerator memberGenerator = new MemberGenerator(event);
-            event.addMembers(new ArrayList<>(memberGenerator.generate(500)));
-            events.add(event);
+            events.add(generate());
         }
         return events;
+    }
+
+    private Collection<Member> generateRandomMembers() {
+        return membersPoll.getRandom(random.nextInt(membersPoll.size()));
+    }
+
+    private Collection<User> generateRandomUsers() {
+        return usersPoll.getRandom(random.nextInt(usersPoll.size()));
+    }
+
+    private Description generateRandomDescription() {
+        return descriptionPool.getRandom();
+    }
+
+    private String generateName() {
+        return String.format("Музыкальное событие №%d", currentId);
+    }
+
+    private Placement generateRandomPlacement() {
+        return placementsPool.getRandom();
+    }
+
+    private long generateId() {
+        return currentId++;
+    }
+
+    private LocalDateTime generateRandomDateTime() {
+        LocalDate date = generateDate();
+        LocalTime time = generateTime();
+        return LocalDateTime.of(date, time);
+    }
+
+    private LocalDate generateDate() {
+        LocalDate start = LocalDate.now().plusDays(random.nextInt(10));
+        LocalDate end = LocalDate.now().plusYears(1);
+        long randomDate = random.nextLong(start.toEpochDay(), end.toEpochDay());
+        return LocalDate.ofEpochDay(randomDate);
+    }
+
+    public LocalTime generateTime() {
+        int hour = random.nextInt(0, 24);
+        int minute = random.nextInt(0, 60);
+        return LocalTime.of(hour, minute);
     }
 }

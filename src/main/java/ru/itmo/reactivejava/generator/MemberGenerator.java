@@ -20,6 +20,11 @@ public class MemberGenerator implements Generator<Member> {
         this.event = event;
     }
 
+    // TODO подумать нужен ли event в member
+    public MemberGenerator( ) {
+        event = null;
+    }
+
     @Override
     public Member generate() {
         MemberType memberType = MemberType.values()[new Random().nextInt(0, MemberType.values().length)];
