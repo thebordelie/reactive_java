@@ -1,4 +1,8 @@
 package ru.itmo.reactivejava.model;
 
-public class MemberType {
+public enum MemberType {
+    GUEST,
+    PERFORMER,
+    ORGANIZER,
+    PARTNER
 }

@@ -1,7 +1,10 @@
 package ru.itmo.reactivejava.generator;
 
 
-public interface Generator<E> {
+import java.util.Collection;
 
-    E generateObject();
+public interface Generator<E> {
+    E generate();
+
+    Collection<E> generate(int count);
 }
