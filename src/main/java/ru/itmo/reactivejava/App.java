@@ -4,6 +4,8 @@ import ru.itmo.reactivejava.generator.*;
 import ru.itmo.reactivejava.model.*;
 import ru.itmo.reactivejava.pool.Pools;
 import ru.itmo.reactivejava.pool.SimplePool;
+import ru.itmo.reactivejava.service.EventStatistics;
+import ru.itmo.reactivejava.service.IterativeAggregationService;
 
 public class App {
 
@@ -31,19 +33,9 @@ public class App {
         eventSimplePool.addAll(eventGenerator.generate(100));
 
         // Аггрегация через цикл
-        long startCycle = System.currentTimeMillis();
-        int eventIndex = 1;
-        for (Event event : eventSimplePool) {
-            long guestCount = 0;
-            for (Member member : event.getMembers()) {
-                if (member.getMemberType() == MemberType.GUEST) {
-                    guestCount += 1;
-                }
-            }
-            System.out.printf("Event %d: %d гостей через цикл%n", eventIndex++, guestCount);
-        }
-        System.out.printf("Аггрегация через цикл заняла %d мс%n", System.currentTimeMillis() - startCycle);
-
+        IterativeAggregationService iterativeAggregationService = new IterativeAggregationService();
+        EventStatistics eventStatistics = iterativeAggregationService.getStatistics(eventSimplePool);
+        System.out.println(eventStatistics);
 
         // Аггрегация через стрим
         long startStream = System.currentTimeMillis();
