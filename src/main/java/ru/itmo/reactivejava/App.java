@@ -6,6 +6,7 @@ import ru.itmo.reactivejava.pool.Pools;
 import ru.itmo.reactivejava.pool.SimplePool;
 import ru.itmo.reactivejava.service.EventStatistics;
 import ru.itmo.reactivejava.service.IterativeAggregationService;
+import ru.itmo.reactivejava.service.StreamAggregationService;
 
 public class App {
 
@@ -25,7 +26,7 @@ public class App {
         PlacementGenerator placementGenerator = new PlacementGenerator();
         EventGenerator eventGenerator = new EventGenerator();
 
-        // simple generate
+        // Simple generate
         userSimplePool.addAll(userGenerator.generate(10000));
         memberSimplePool.addAll(memberGenerator.generate(500));
         descriptionSimplePool.addAll(descriptionGenerator.generate(100));
@@ -34,20 +35,13 @@ public class App {
 
         // Аггрегация через цикл
         IterativeAggregationService iterativeAggregationService = new IterativeAggregationService();
-        EventStatistics eventStatistics = iterativeAggregationService.getStatistics(eventSimplePool);
-        System.out.println(eventStatistics);
+        EventStatistics iterativeEventStatistics = iterativeAggregationService.getStatistics(eventSimplePool);
+        System.out.println(iterativeEventStatistics);
 
-        // Аггрегация через стрим
-        long startStream = System.currentTimeMillis();
-        final int[] streamIndex = {1};
-        eventSimplePool.stream().forEach(e -> {
-            long guestCount = e.getMembers().stream()
-                    .filter(m -> m.getMemberType() == MemberType.GUEST)
-                    .count();
-            System.out.printf("Event %d: %d гостей через стрим%n", streamIndex[0]++, guestCount);
-        });
-        System.out.printf("Аггрегация через стрим заняла %d мс%n", System.currentTimeMillis() - startStream);
-
+        // Аггрегация через стрим и кастомный коллектор
+        StreamAggregationService streamAggregationService = new StreamAggregationService();
+        EventStatistics streamEventStatistics = streamAggregationService.getStatistics(eventSimplePool);
+        System.out.println(streamEventStatistics);
 
     }
 }
