@@ -12,4 +12,9 @@ public class StreamAggregationService implements AggregationService<EventStatist
         return events.stream()
                 .collect(new EventStatisticsCollector());
     }
+
+    @Override
+    public String toString() {
+        return "Агрегация через стрим и кастомный коллектор";
+    }
 }

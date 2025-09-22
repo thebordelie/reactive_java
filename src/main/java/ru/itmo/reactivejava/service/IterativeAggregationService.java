@@ -33,4 +33,9 @@ public class IterativeAggregationService implements AggregationService<EventStat
                 .avgCapacity(avgCapacity)
                 .build();
     }
+
+    @Override
+    public String toString() {
+        return "Агрегация через цикл";
+    }
 }

@@ -26,6 +26,10 @@ public final class SimplePool<T> implements Pool<T> {
         return values.subList(0, count);
     }
 
+    public void clear() {
+        values.clear();
+    }
+
     public int size() {
         return values.size();
     }

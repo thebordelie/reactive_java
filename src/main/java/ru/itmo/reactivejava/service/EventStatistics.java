@@ -26,7 +26,7 @@ public class EventStatistics {
         sb.append("Среднее количество участников на событиях: ").append(avgMembersPerEvent).append("\n");
         sb.append("Максимальная вместимость площадок: ").append(maxCapacity).append("\n");
         sb.append("Минимальная вместимость площадок: ").append(minCapacity).append("\n");
-        sb.append("Средняя вместимость площадок: ").append(avgCapacity).append("\n");
+        sb.append("Средняя вместимость площадок: ").append(avgCapacity);
         return sb.toString();
     }
 }
