@@ -11,7 +11,6 @@ public class StreamAggregationService implements AggregationService<EventStatist
 
     @Override
     public EventStatistics getStatistics() {
-
         return events.stream()
                 .collect(new EventStatisticsCollector());
     }
