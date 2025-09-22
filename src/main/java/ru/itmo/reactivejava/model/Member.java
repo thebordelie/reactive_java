@@ -8,5 +8,4 @@ import lombok.Data;
 public class Member {
     private User user;
     private MemberType memberType;
-    private final Event event;
 }

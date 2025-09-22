@@ -1,6 +1,6 @@
 package ru.itmo.reactivejava.generator;
 
-import ru.itmo.reactivejava.model.Event;
+import lombok.NoArgsConstructor;
 import ru.itmo.reactivejava.model.Member;
 import ru.itmo.reactivejava.model.MemberType;
 import ru.itmo.reactivejava.model.User;
@@ -11,25 +11,16 @@ import java.util.Collection;
 import java.util.Random;
 
 // TODO Петя
+@NoArgsConstructor
 public class MemberGenerator implements Generator<Member> {
 
-    private final Event event;
     SimplePool<User> usersSimplePool = Pools.get(User.class);
-
-    public MemberGenerator(Event event) {
-        this.event = event;
-    }
-
-    // TODO подумать нужен ли event в member
-    public MemberGenerator( ) {
-        event = null;
-    }
 
     @Override
     public Member generate() {
         MemberType memberType = MemberType.values()[new Random().nextInt(0, MemberType.values().length)];
         User user = usersSimplePool.getRandom();
-        return new Member(user, memberType, event);
+        return new Member(user, memberType);
     }
 
     @Override
@@ -37,7 +28,7 @@ public class MemberGenerator implements Generator<Member> {
         Collection<User> users = usersSimplePool.getRandom(count);
         return users.stream().map(u -> {
             MemberType memberType = MemberType.values()[new Random().nextInt(0, MemberType.values().length)];
-            return new Member(u, memberType, event);
+            return new Member(u, memberType);
         }).toList();
     }
 }

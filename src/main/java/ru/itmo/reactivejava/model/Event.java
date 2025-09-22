@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @AllArgsConstructor
@@ -17,5 +15,4 @@ public class Event {
     private Description description;
     private Placement placement;
     private List<Member> members;
-    private List<User> users;
 }

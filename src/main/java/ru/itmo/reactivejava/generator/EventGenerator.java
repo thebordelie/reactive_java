@@ -1,6 +1,9 @@
 package ru.itmo.reactivejava.generator;
 
-import ru.itmo.reactivejava.model.*;
+import ru.itmo.reactivejava.model.Description;
+import ru.itmo.reactivejava.model.Event;
+import ru.itmo.reactivejava.model.Member;
+import ru.itmo.reactivejava.model.Placement;
 import ru.itmo.reactivejava.pool.Pools;
 import ru.itmo.reactivejava.pool.SimplePool;
 
@@ -18,7 +21,6 @@ public class EventGenerator implements Generator<Event> {
     private final SimplePool<Description> descriptionPool = Pools.get(Description.class);
     private final SimplePool<Placement> placementsPool = Pools.get(Placement.class);
     private final SimplePool<Member> membersPoll = Pools.get(Member.class);
-    private final SimplePool<User> usersPoll = Pools.get(User.class);
 
     @Override
     public Event generate() {
@@ -28,8 +30,7 @@ public class EventGenerator implements Generator<Event> {
         Description description = generateRandomDescription();
         Placement placement = generateRandomPlacement();
         List<Member> members = new ArrayList<>(generateRandomMembers());
-        List<User> users = new ArrayList<>(generateRandomUsers());
-        return new Event(id, name, time, description, placement, members, users);
+        return new Event(id, name, time, description, placement, members);
     }
 
     @Override
@@ -42,11 +43,8 @@ public class EventGenerator implements Generator<Event> {
     }
 
     private Collection<Member> generateRandomMembers() {
-        return membersPoll.getRandom(random.nextInt(membersPoll.size()));
-    }
-
-    private Collection<User> generateRandomUsers() {
-        return usersPoll.getRandom(random.nextInt(usersPoll.size()));
+        MemberGenerator memberGenerator = new MemberGenerator();
+        return memberGenerator.generate(random.nextInt(0, 100));
     }
 
     private Description generateRandomDescription() {

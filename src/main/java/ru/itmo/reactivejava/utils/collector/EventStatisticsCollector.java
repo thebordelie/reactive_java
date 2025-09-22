@@ -1,5 +1,7 @@
 package ru.itmo.reactivejava.utils.collector;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import ru.itmo.reactivejava.model.Event;
 import ru.itmo.reactivejava.service.EventStatistics;
@@ -15,9 +17,10 @@ public final class EventStatisticsCollector implements Collector<Event, EventSta
 
 
     @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     public static final class EventStatisticsAccumulator {
         public long totalEvents;
-        public long totalUsers;
         public long totalMembers;
         public long totalCapacity;
         public int minCapacity;
@@ -29,7 +32,6 @@ public final class EventStatisticsCollector implements Collector<Event, EventSta
     public Supplier<EventStatisticsAccumulator> supplier() {
         EventStatisticsAccumulator acc = new EventStatisticsAccumulator();
         acc.totalEvents = 0;
-        acc.totalUsers = 0;
         acc.totalMembers = 0;
         acc.totalCapacity = 0;
         acc.minCapacity = Integer.MAX_VALUE;
@@ -45,7 +47,6 @@ public final class EventStatisticsCollector implements Collector<Event, EventSta
             acc.totalCapacity += event.getPlacement().getCapacity();
             acc.totalMembers += event.getMembers().size();
             acc.totalEvents += 1;
-            acc.totalUsers += event.getUsers().size();
         };
     }
 
@@ -54,7 +55,6 @@ public final class EventStatisticsCollector implements Collector<Event, EventSta
         return (EventStatisticsAccumulator acc1, EventStatisticsAccumulator acc2) -> {
             EventStatisticsAccumulator acc = new EventStatisticsAccumulator();
             acc.totalEvents = acc1.totalEvents + acc2.totalEvents;
-            acc.totalUsers = acc1.totalUsers + acc2.totalUsers;
             acc.totalMembers = acc1.totalMembers + acc2.totalMembers;
             acc.totalCapacity = acc1.totalCapacity + acc2.totalCapacity;
             acc.minCapacity = Math.min(acc1.minCapacity, acc2.minCapacity);
@@ -68,7 +68,6 @@ public final class EventStatisticsCollector implements Collector<Event, EventSta
         return acc -> {
             if (acc.totalEvents == 0) {
                 return EventStatistics.builder()
-                        .totalUsers(0)
                         .totalMembers(0)
                         .totalEvents(0)
                         .minCapacity(0)
@@ -78,7 +77,6 @@ public final class EventStatisticsCollector implements Collector<Event, EventSta
                         .build();
             }
             return EventStatistics.builder()
-                    .totalUsers(acc.totalUsers)
                     .totalMembers(acc.totalMembers)
                     .totalEvents(acc.totalEvents)
                     .minCapacity(acc.minCapacity)

@@ -1,22 +1,23 @@
 package ru.itmo.reactivejava.service;
 
 import ru.itmo.reactivejava.model.Event;
+import ru.itmo.reactivejava.pool.Pools;
 import ru.itmo.reactivejava.pool.SimplePool;
 
-public class IterativeAggregationService implements AggregationService<EventStatistics, Event> {
+public class IterativeAggregationService implements AggregationService<EventStatistics> {
+
+    SimplePool<Event> events = Pools.get(Event.class);
 
     @Override
-    public EventStatistics getStatistics(SimplePool<Event> events) {
+    public EventStatistics getStatistics() {
         int totalEvents = events.size();
         long totalMembers = 0;
-        long totalUsers = 0;
         int maxCapacity = Integer.MIN_VALUE;
         int minCapacity = Integer.MAX_VALUE;
         double avgCapacity;
         int capacity = 0;
         for (Event event : events) {
             totalMembers += event.getMembers().size();
-            totalUsers += event.getUsers().size();
             maxCapacity = Math.max(maxCapacity, event.getPlacement().getCapacity());
             minCapacity = Math.min(minCapacity, event.getPlacement().getCapacity());
             capacity += event.getPlacement().getCapacity();
@@ -26,7 +27,6 @@ public class IterativeAggregationService implements AggregationService<EventStat
         return EventStatistics.builder()
                 .totalEvents(totalEvents)
                 .totalMembers(totalMembers)
-                .totalUsers(totalUsers)
                 .avgMembersPerEvent(avgMembersPerEvent)
                 .maxCapacity(maxCapacity)
                 .minCapacity(minCapacity)
