@@ -10,7 +10,6 @@ import ru.itmo.reactivejava.pool.SimplePool;
 import java.util.Collection;
 import java.util.Random;
 
-// TODO Петя
 @NoArgsConstructor
 public class MemberGenerator implements Generator<Member> {
 

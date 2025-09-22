@@ -18,9 +18,9 @@ import java.util.Random;
 public class EventGenerator implements Generator<Event> {
     private long currentId = 1;
     private final Random random = new Random();
-    private final SimplePool<Description> descriptionPool = Pools.get(Description.class);
     private final SimplePool<Placement> placementsPool = Pools.get(Placement.class);
-    private final SimplePool<Member> membersPoll = Pools.get(Member.class);
+    private final MemberGenerator memberGenerator = new MemberGenerator();
+    private final DescriptionGenerator descriptionGenerator = new DescriptionGenerator();
 
     @Override
     public Event generate() {
@@ -43,12 +43,11 @@ public class EventGenerator implements Generator<Event> {
     }
 
     private Collection<Member> generateRandomMembers() {
-        MemberGenerator memberGenerator = new MemberGenerator();
         return memberGenerator.generate(random.nextInt(0, 100));
     }
 
     private Description generateRandomDescription() {
-        return descriptionPool.getRandom();
+        return descriptionGenerator.generate();
     }
 
     private String generateName() {

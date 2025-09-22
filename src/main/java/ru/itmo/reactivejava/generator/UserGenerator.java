@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
 
-
-// TODO Петя
 public class UserGenerator implements Generator<User> {
 
     Faker faker = new Faker();
