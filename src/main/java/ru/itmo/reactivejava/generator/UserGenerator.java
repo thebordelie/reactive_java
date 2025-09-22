@@ -9,6 +9,7 @@ import java.util.Random;
 
 public class UserGenerator implements Generator<User> {
 
+    int currentId = 1;
     Faker faker = new Faker();
     Random random = new Random();
 
@@ -33,7 +34,7 @@ public class UserGenerator implements Generator<User> {
     }
 
     private int generateId() {
-        return random.nextInt();
+        return currentId++;
     }
 
     private String generateFirstName() {
