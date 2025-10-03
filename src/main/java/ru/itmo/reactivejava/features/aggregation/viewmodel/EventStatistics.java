@@ -2,9 +2,11 @@ package ru.itmo.reactivejava.features.aggregation.viewmodel;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 
 @Builder
 @AllArgsConstructor
+@Getter
 public class EventStatistics {
     private long totalEvents;
     private long totalMembers;
@@ -36,8 +38,7 @@ public class EventStatistics {
         if (Double.compare(that.avgMembersPerEvent, avgMembersPerEvent) != 0) return false;
         if (maxCapacity != that.maxCapacity) return false;
         if (minCapacity != that.minCapacity) return false;
-        if (Double.compare(that.avgCapacity, avgCapacity) != 0) return false;
-        return true;
+        return Double.compare(that.avgCapacity, avgCapacity) == 0;
     }
 
     @Override
