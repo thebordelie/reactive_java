@@ -2,9 +2,7 @@ package ru.itmo.reactivejava.features.aggregation.viewmodel;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 
-@Data
 @Builder
 @AllArgsConstructor
 public class EventStatistics {
@@ -27,4 +25,30 @@ public class EventStatistics {
         sb.append("Средняя вместимость площадок: ").append(avgCapacity);
         return sb.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EventStatistics that = (EventStatistics) o;
+        if (totalEvents != that.totalEvents) return false;
+        if (totalMembers != that.totalMembers) return false;
+        if (Double.compare(that.avgMembersPerEvent, avgMembersPerEvent) != 0) return false;
+        if (maxCapacity != that.maxCapacity) return false;
+        if (minCapacity != that.minCapacity) return false;
+        if (Double.compare(that.avgCapacity, avgCapacity) != 0) return false;
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Long.hashCode(totalEvents);
+        result = 31 * result + Long.hashCode(totalMembers);
+        result = 31 * result + Double.hashCode(avgMembersPerEvent);
+        result = 31 * result + Integer.hashCode(maxCapacity);
+        result = 31 * result + Integer.hashCode(minCapacity);
+        result = 31 * result + Double.hashCode(avgCapacity);
+        return result;
+    }
+
 }
