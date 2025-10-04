@@ -1,16 +1,28 @@
 package ru.itmo.reactivejava.features.aggregation.internal;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import ru.itmo.reactivejava.domain.event.Event;
 import ru.itmo.reactivejava.features.aggregation.viewmodel.EventStatistics;
 
 @Getter
+@NoArgsConstructor
 public class EventStatisticsAccumulator {
     private int totalEvents = 0;
     private long totalMembers = 0;
     private int maxCapacity = Integer.MIN_VALUE;
     private int minCapacity = Integer.MAX_VALUE;
     private int capacity = 0;
+
+    public EventStatisticsAccumulator(Event e) {
+        totalEvents = 1;
+        totalMembers = e.getMembers().size();
+        int cap = e.getPlacement().getCapacity();
+        maxCapacity = cap;
+        minCapacity = cap;
+        capacity = cap;
+    }
 
     public void update(Event event) {
         totalEvents++;

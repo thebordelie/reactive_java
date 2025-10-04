@@ -2,6 +2,7 @@ package ru.itmo.reactivejava.features.aggregation.service;
 
 import ru.itmo.reactivejava.domain.event.Event;
 import ru.itmo.reactivejava.domain.event.MusicCompetitionGenre;
+import ru.itmo.reactivejava.features.aggregation.internal.EventStatisticsAccumulator;
 import ru.itmo.reactivejava.features.aggregation.viewmodel.EventStatistics;
 import ru.itmo.reactivejava.features.pool.Pools;
 import ru.itmo.reactivejava.features.pool.SimplePool;
@@ -51,28 +52,25 @@ public class DefaultEventStreamAggregationService implements EventAggregationSer
 
     @Override
     public Map<MusicCompetitionGenre, EventStatistics> getStatisticsByGenre() {
+
         return events.stream().collect(
-                groupingBy(
-                        e -> e.getDescription().genre(),
-                        () -> new EnumMap<>(MusicCompetitionGenre.class),
-                        collectingAndThen(
-                                teeing(
-                                        summarizingInt(e -> e.getPlacement().getCapacity()),
-                                        summingInt(e -> e.getMembers().size()),
-                                        (capStats, totalMembers) -> {
-                                            long n = capStats.getCount();
-                                            double avgMembers = n > 0 ? (double) totalMembers / n : 0.0;
-                                            return EventStatistics.builder()
-                                                    .totalMembers(totalMembers)
-                                                    .totalEvents((int) n)
-                                                    .avgMembersPerEvent(avgMembers)
-                                                    .minCapacity(n > 0 ? capStats.getMin() : 0)
-                                                    .maxCapacity(n > 0 ? capStats.getMax() : 0)
-                                                    .avgCapacity(n > 0 ? capStats.getAverage() : 0.0)
-                                                    .build();
-                                        }
-                                ),
-                                es -> es
+                collectingAndThen(
+                        toMap(
+                                e -> e.getDescription().genre(),
+                                EventStatisticsAccumulator::new,
+                                (a, b) -> {
+                                    a.merge(b);
+                                    return a;
+                                },
+                                () -> new EnumMap<>(MusicCompetitionGenre.class)
+                        ),
+                        accMap -> accMap.entrySet().stream().collect(
+                                toMap(
+                                        Map.Entry::getKey,
+                                        e -> e.getValue().toEventStatistics(),
+                                        (x, y) -> x,
+                                        () -> new EnumMap<>(MusicCompetitionGenre.class)
+                                )
                         )
                 )
         );
