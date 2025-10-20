@@ -38,6 +38,10 @@ public final class SimplePool<T> implements Pool<T> {
         return values.stream();
     }
 
+    public Stream<T> parallelStream(){
+        return values.parallelStream();
+    }
+
     @Override
     public Iterator<T> iterator() {
         return values.iterator();
