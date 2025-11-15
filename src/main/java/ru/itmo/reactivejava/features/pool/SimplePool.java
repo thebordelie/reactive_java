@@ -47,4 +47,8 @@ public final class SimplePool<T> implements Pool<T> {
         return values.iterator();
     }
 
+    public List<T> getValues() {
+        return values;
+    }
+
 }

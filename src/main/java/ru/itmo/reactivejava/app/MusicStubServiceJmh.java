@@ -34,7 +34,8 @@ public class MusicStubServiceJmh {
             "iterative",
             "custom-stream",
             "default-stream",
-            "parallel-stream"})
+            "parallel-stream",
+            "optimized-parallel-stream"})
     String serviceName;
 
     @Param({"500", "2000"})
@@ -69,6 +70,7 @@ public class MusicStubServiceJmh {
             case "custom-stream" -> new StreamEventAggregationService();
             case "default-stream" -> new DefaultStreamEventAggregationService();
             case "parallel-stream" -> new ParallelStreamEventAggregationService();
+            case "optimized-parallel-stream" -> new OptimizedParallelStreamEventAggregationService();
             default -> throw new Exception("Unknown service name: " + serviceName);
         };
     }
