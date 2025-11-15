@@ -23,9 +23,10 @@ public class IterativeEventAggregationService implements EventAggregationService
         private void update(Event event) {
             totalEvents++;
             totalMembers += event.getMembers().size();
-            maxCapacity = Math.max(maxCapacity, event.getPlacement().getCapacity());
-            minCapacity = Math.min(minCapacity, event.getPlacement().getCapacity());
-            capacity += event.getPlacement().getCapacity();
+            int placementCapacity = event.getPlacement().getCapacity();
+            maxCapacity = Math.max(maxCapacity, placementCapacity);
+            minCapacity = Math.min(minCapacity, placementCapacity);
+            capacity += placementCapacity;
         }
 
         private EventStatistics toEventStatistics() {

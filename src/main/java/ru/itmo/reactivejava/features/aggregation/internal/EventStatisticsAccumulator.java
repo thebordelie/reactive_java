@@ -1,6 +1,5 @@
 package ru.itmo.reactivejava.features.aggregation.internal;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ru.itmo.reactivejava.domain.event.Event;
@@ -15,21 +14,13 @@ public class EventStatisticsAccumulator {
     private int minCapacity = Integer.MAX_VALUE;
     private int capacity = 0;
 
-    public EventStatisticsAccumulator(Event e) {
-        totalEvents = 1;
-        totalMembers = e.getMembers().size();
-        int cap = e.getPlacement().getCapacity();
-        maxCapacity = cap;
-        minCapacity = cap;
-        capacity = cap;
-    }
-
     public void update(Event event) {
+        int placementCapacity = event.getPlacement().getCapacity();
         totalEvents++;
         totalMembers += event.getMembers().size();
-        maxCapacity = Math.max(maxCapacity, event.getPlacement().getCapacity());
-        minCapacity = Math.min(minCapacity, event.getPlacement().getCapacity());
-        capacity += event.getPlacement().getCapacity();
+        maxCapacity = Math.max(maxCapacity, placementCapacity);
+        minCapacity = Math.min(minCapacity, placementCapacity);
+        capacity += placementCapacity;
     }
 
     public EventStatisticsAccumulator merge(EventStatisticsAccumulator other) {

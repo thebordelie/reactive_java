@@ -4,10 +4,7 @@ import de.vandermeer.asciitable.AsciiTable;
 import ru.itmo.reactivejava.domain.event.Event;
 import ru.itmo.reactivejava.domain.event.MusicCompetitionGenre;
 import ru.itmo.reactivejava.domain.placement.Placement;
-import ru.itmo.reactivejava.features.aggregation.service.DefaultEventStreamAggregationService;
-import ru.itmo.reactivejava.features.aggregation.service.EventAggregationService;
-import ru.itmo.reactivejava.features.aggregation.service.IterativeEventAggregationService;
-import ru.itmo.reactivejava.features.aggregation.service.StreamEventAggregationService;
+import ru.itmo.reactivejava.features.aggregation.service.*;
 import ru.itmo.reactivejava.features.aggregation.viewmodel.EventStatistics;
 import ru.itmo.reactivejava.features.generation.EventGenerator;
 import ru.itmo.reactivejava.features.generation.PlacementGenerator;
@@ -62,7 +59,9 @@ public class MusicStubService {
         List<EventAggregationService> aggregationServiceList = List.of(
                 new IterativeEventAggregationService(),
                 new StreamEventAggregationService(),
-                new DefaultEventStreamAggregationService()
+                new DefaultStreamEventAggregationService(),
+                new ParallelStreamEventAggregationService(),
+                new OptimizedParallelStreamEventAggregationService()
         );
 
 
