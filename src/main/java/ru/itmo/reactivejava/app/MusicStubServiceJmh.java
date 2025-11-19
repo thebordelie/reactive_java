@@ -21,8 +21,8 @@ import java.util.concurrent.TimeUnit;
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
 @Fork(1)
-@Warmup(iterations = 1, time = 1, timeUnit = TimeUnit.SECONDS)
-@Measurement(iterations = 2, time = 1, timeUnit = TimeUnit.SECONDS)
+@Warmup(iterations = 0, time = 1, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations = 1, time = 1, timeUnit = TimeUnit.SECONDS)
 public class MusicStubServiceJmh {
 
     private record PoolCounts() {
@@ -35,10 +35,10 @@ public class MusicStubServiceJmh {
             "custom-stream",
             "default-stream",
             "parallel-stream",
-            "optimized-parallel-stream"})
+            "custom-parallel-stream"})
     String serviceName;
 
-    @Param({"500", "2000"})
+    @Param({"2000"})
     int eventCount;
 
     private EventAggregationService aggregationService;
@@ -67,10 +67,10 @@ public class MusicStubServiceJmh {
         eventSimplePool.addAll(eventGenerator.generate(eventCount));
         aggregationService = switch (serviceName) {
             case "iterative" -> new IterativeEventAggregationService();
-            case "custom-stream" -> new StreamEventAggregationService();
             case "default-stream" -> new DefaultStreamEventAggregationService();
+            case "custom-stream" -> new CustomStreamEventAggregationService();
             case "parallel-stream" -> new ParallelStreamEventAggregationService();
-            case "optimized-parallel-stream" -> new OptimizedParallelStreamEventAggregationService();
+            case "custom-parallel-stream" -> new CustomParallelStreamEventAggregationService();
             default -> throw new Exception("Unknown service name: " + serviceName);
         };
     }
@@ -80,4 +80,6 @@ public class MusicStubServiceJmh {
         Map<MusicCompetitionGenre, EventStatistics> stats = aggregationService.getStatisticsByGenre();
         bh.consume(stats);
     }
+
+    // todo исследовать разницу в эффективности параллельных обработок с задержкой и без задержки
 }

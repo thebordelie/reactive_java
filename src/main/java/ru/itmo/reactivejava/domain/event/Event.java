@@ -22,9 +22,7 @@ public class Event {
 
     @SneakyThrows
     public Placement getPlacement() {
-        if (ThreadLocalRandom.current().nextInt(100) < 15) {
-            Thread.sleep(15);
-        }
+        Thread.sleep(ThreadLocalRandom.current().nextInt(10));
         return placement;
     }
 }

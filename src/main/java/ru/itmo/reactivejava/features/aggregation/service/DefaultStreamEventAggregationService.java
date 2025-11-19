@@ -16,28 +16,6 @@ public class DefaultStreamEventAggregationService implements EventAggregationSer
     SimplePool<Event> events = Pools.get(Event.class);
 
     @Override
-    public EventStatistics getStatistics() {
-        return events.stream().collect(
-                teeing(
-                        summarizingInt(e -> e.getPlacement().getCapacity()),
-                        summingInt(e -> e.getMembers().size()),
-                        (capStats, totalMembers) -> {
-                            long n = capStats.getCount();
-                            double avgMembers = n > 0 ? (double) totalMembers / n : 0.0;
-                            return EventStatistics.builder()
-                                    .totalMembers(totalMembers)
-                                    .totalEvents((int) n)
-                                    .avgMembersPerEvent(avgMembers)
-                                    .minCapacity(n > 0 ? capStats.getMin() : 0)
-                                    .maxCapacity(n > 0 ? capStats.getMax() : 0)
-                                    .avgCapacity(n > 0 ? capStats.getAverage() : 0.0)
-                                    .build();
-                        }
-                )
-        );
-    }
-
-    @Override
     public Map<MusicCompetitionGenre, EventStatistics> getStatisticsByGenre() {
         return events.stream().collect(
                 groupingBy(
