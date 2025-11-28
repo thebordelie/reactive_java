@@ -2,7 +2,6 @@ package ru.itmo.reactivejava.features.aggregation.collector;
 
 import ru.itmo.reactivejava.domain.event.Event;
 import ru.itmo.reactivejava.domain.event.MusicCompetitionGenre;
-import ru.itmo.reactivejava.features.aggregation.internal.EventStatisticsAccumulator;
 import ru.itmo.reactivejava.features.aggregation.viewmodel.EventStatistics;
 
 import java.util.EnumMap;

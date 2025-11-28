@@ -58,10 +58,10 @@ public class MusicStubService {
         );
         List<EventAggregationService> aggregationServiceList = List.of(
                 new IterativeEventAggregationService(),
-                new StreamEventAggregationService(),
+                new CustomStreamEventAggregationService(),
                 new DefaultStreamEventAggregationService(),
                 new ParallelStreamEventAggregationService(),
-                new OptimizedParallelStreamEventAggregationService()
+                new CustomParallelStreamEventAggregationService()
         );
 
 
@@ -153,7 +153,7 @@ public class MusicStubService {
             at.addRule();
         }
 
-        System.out.println(at.render(118));
+        System.out.println(at.render(170));
         System.out.println();
     }
 
