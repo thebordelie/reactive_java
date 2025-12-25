@@ -52,16 +52,12 @@ public class MusicStubService {
         EventGenerator eventGenerator = new EventGenerator();
 
         List<Integer> counts = List.of(
-                PoolCounts.eventCount / 50,
-                PoolCounts.eventCount / 5,
-                PoolCounts.eventCount
+                500,
+                2000
         );
         List<EventAggregationService> aggregationServiceList = List.of(
-                new IterativeEventAggregationService(),
-                new CustomStreamEventAggregationService(),
-                new DefaultStreamEventAggregationService(),
                 new ParallelStreamEventAggregationService(),
-                new CustomParallelStreamEventAggregationService()
+                new ObservableEventAggregationService()
         );
 
 
