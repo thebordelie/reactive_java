@@ -1,5 +1,8 @@
 package ru.itmo.reactivejava.features.pool;
 
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Observable;
+
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
@@ -51,4 +54,11 @@ public final class SimplePool<T> implements Pool<T> {
         return values;
     }
 
+    public Observable<T> observable() {
+        return Observable.fromIterable(values);
+    }
+
+    public Flowable<T> flowable() {
+        return Flowable.fromIterable(values);
+    }
 }

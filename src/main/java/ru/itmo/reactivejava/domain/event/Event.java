@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.SneakyThrows;
 import ru.itmo.reactivejava.domain.member.Member;
 import ru.itmo.reactivejava.domain.placement.Placement;
+import ru.itmo.reactivejava.shared.config.DelayConfig;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,7 +23,9 @@ public class Event {
 
     @SneakyThrows
     public Placement getPlacement() {
-        Thread.sleep(ThreadLocalRandom.current().nextInt(10));
+        if (DelayConfig.isEnabled()) {
+            Thread.sleep(ThreadLocalRandom.current().nextInt(10));
+        }
         return placement;
     }
 }

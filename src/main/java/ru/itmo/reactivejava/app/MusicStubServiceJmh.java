@@ -12,6 +12,7 @@ import ru.itmo.reactivejava.features.generation.PlacementGenerator;
 import ru.itmo.reactivejava.features.generation.UserGenerator;
 import ru.itmo.reactivejava.features.pool.Pools;
 import ru.itmo.reactivejava.features.pool.SimplePool;
+import ru.itmo.reactivejava.shared.config.DelayConfig;
 import ru.itmo.reactivejava.shared.user.User;
 
 import java.util.Map;
@@ -35,11 +36,17 @@ public class MusicStubServiceJmh {
             "custom-stream",
             "default-stream",
             "parallel-stream",
-            "custom-parallel-stream"})
+            "custom-parallel-stream",
+            "rxjava-observable",
+            "rxjava-flowable"})
     String serviceName;
 
-    @Param({"2000"})
+
+    @Param({"500", "2000"})
     int eventCount;
+
+    @Param({"true", "false"})
+    boolean delayEnabled;
 
     private EventAggregationService aggregationService;
 
@@ -61,16 +68,19 @@ public class MusicStubServiceJmh {
 
     @Setup(Level.Iteration)
     public void iterationSetup() throws Exception {
+        DelayConfig.setEnabled(delayEnabled);
         SimplePool<Event> eventSimplePool = Pools.get(Event.class);
         EventGenerator eventGenerator = new EventGenerator();
         eventSimplePool.clear();
-        eventSimplePool.addAll(eventGenerator.generate(eventCount));
+        eventSimplePool.addAll(eventGenerator.generate(delayEnabled ? eventCount : eventCount * 100));
         aggregationService = switch (serviceName) {
             case "iterative" -> new IterativeEventAggregationService();
             case "default-stream" -> new DefaultStreamEventAggregationService();
             case "custom-stream" -> new CustomStreamEventAggregationService();
             case "parallel-stream" -> new ParallelStreamEventAggregationService();
             case "custom-parallel-stream" -> new CustomParallelStreamEventAggregationService();
+            case "rxjava-observable" -> new RxJavaEventAggregationService();
+            case "rxjava-flowable" -> new FlowableEventAggregationService();
             default -> throw new Exception("Unknown service name: " + serviceName);
         };
     }
@@ -80,6 +90,4 @@ public class MusicStubServiceJmh {
         Map<MusicCompetitionGenre, EventStatistics> stats = aggregationService.getStatisticsByGenre();
         bh.consume(stats);
     }
-
-    // todo исследовать разницу в эффективности параллельных обработок с задержкой и без задержки
 }

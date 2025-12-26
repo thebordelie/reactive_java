@@ -23,7 +23,7 @@ public class MusicStubService {
     private record PoolCounts() {
         static int userCount = 1000;
         static int placementCount = 50;
-        static int eventCount = 250000;
+        static int eventCount = 500;
     }
 
     public void init() {
@@ -61,7 +61,9 @@ public class MusicStubService {
                 new CustomStreamEventAggregationService(),
                 new DefaultStreamEventAggregationService(),
                 new ParallelStreamEventAggregationService(),
-                new CustomParallelStreamEventAggregationService()
+                new CustomParallelStreamEventAggregationService(),
+                new RxJavaEventAggregationService(),
+                new FlowableEventAggregationService()
         );
 
 

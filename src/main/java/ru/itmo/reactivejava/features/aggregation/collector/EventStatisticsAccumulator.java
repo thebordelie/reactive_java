@@ -23,6 +23,14 @@ public class EventStatisticsAccumulator {
         capacity += placementCapacity;
     }
 
+    public void updateWithData(int placementCapacity, int membersCount) {
+        totalEvents++;
+        totalMembers += membersCount;
+        maxCapacity = Math.max(maxCapacity, placementCapacity);
+        minCapacity = Math.min(minCapacity, placementCapacity);
+        capacity += placementCapacity;
+    }
+
     public void merge(EventStatisticsAccumulator other) {
         this.totalEvents += other.totalEvents;
         this.totalMembers += other.totalMembers;
