@@ -16,7 +16,8 @@ public class RxJavaEventAggregationService implements EventAggregationService {
 
     private final SimplePool<Event> events = Pools.get(Event.class);
 
-    private record EventData(MusicCompetitionGenre genre, int capacity, int membersCount) {}
+    private record EventData(MusicCompetitionGenre genre, int capacity, int membersCount) {
+    }
 
     @Override
     public Map<MusicCompetitionGenre, EventStatistics> getStatisticsByGenre() {
